@@ -8,6 +8,8 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: "192.168.33.10"
     master.vm.provider "virtualbox" do |master|
       master.name = "KubMaster"
+      master.memory = "2048"
+      master.cpus = 2
     end
     master.vm.provision "shell", inline: <<-SHELL
       #Installation of Docker
@@ -27,6 +29,8 @@ Vagrant.configure("2") do |config|
       sudo apt-get install -y kubelet=1.15.7-00 kubeadm=1.15.7-00 kubectl=1.15.7-00
       sudo apt-mark hold kubelet kubeadm kubectl
       echo "Successfully installed kubeadm"
+      echo "Initialization of cluster ..."
+#      sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors Swap
     SHELL
   end
   (1..2).each do |i|

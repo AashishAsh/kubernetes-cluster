@@ -1,0 +1,28 @@
+echo 'Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"' | sudo tee  /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"
+#Fixing Docker systemd  ## ERROR [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+> {
+>   "exec-opts": ["native.cgroupdriver=systemd"],
+>   "log-driver": "json-file",
+>   "log-opts": {
+>     "max-size": "100m"
+>   },
+>   "storage-driver": "overlay2"
+> }
+> EOF
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors Swap
+
+# disabling swap mem
+https://www.tecmint.com/disable-swap-partition-in-centos-ubuntu/
+sudo vi /etc/fstab
+blkid
+sudo swapoff /dev/mapper/vagrant--vg-swap_1
+sudo swapoff -a 
+free -h
+sudo mount -a
+
