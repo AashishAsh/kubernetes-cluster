@@ -1,0 +1,8 @@
+# Installation - https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos
+# Issue kubelet - https://github.com/kubernetes/kubernetes/issues/54918#issuecomment-351757646
+yum install docker-ce*
+sudo mkdir -p  /etc/cnt/net.d
+sudo chmod 744 /etc/cnt/net.d
+sudo mkdir -p  /etc/cni/net.d
+sudo chmod 744 /etc/cni/net.d
+

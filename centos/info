@@ -1,0 +1,3 @@
+kubectl cluster-info
+kubectl version -o json
+
